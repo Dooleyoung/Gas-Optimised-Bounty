@@ -1,14 +1,12 @@
-const { ethers } = require("hardhat");
 const { expect } = require("chai");
 
-describe("Deploy Gas Challenge Contract", () => {
+describe("Gas Challenge Contract", () => {
   let gas_contract;
 
   beforeEach(async () => {
-    const gas_challenge_contract = await ethers.getContractFactory(
-      "gasChallenge"
-    );
-    gas_contract = await gas_challenge_contract.deploy();
+    const gasChallenge = await ethers.getContractFactory("gasChallenge");
+    gas_contract = await gasChallenge.deploy();
+    await gas_contract.deployed();
   });
 
   describe("Compute Gas", () => {
@@ -20,7 +18,14 @@ describe("Deploy Gas Challenge Contract", () => {
 
   describe("Check Sum Of Array", () => {
     it("Should return 0", async () => {
-      // Write test block here to check sum of array equals 0
+      // Run the optimized function to update the sum
+      await gas_contract.optimizedFunction();
+
+      // Get the sum of the array
+      const sum = await gas_contract.getSumOfArray();
+
+      // Assert that the sum is 0
+      expect(sum.toNumber()).to.equal(0);
     });
   });
 });
